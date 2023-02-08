@@ -4,7 +4,6 @@
 
 # Mise à jour de systéme
 sudo apt-get update -y
-sudo apt-get upgrade -y
 
 # Installation de dépendances
 sudo apt-get autoremove -y
