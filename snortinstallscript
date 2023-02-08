@@ -93,7 +93,13 @@ sudo touch /usr/local/etc/snort/rules/local.rules
 wget https://www.snort.org/rules/community -O ~/community.tar.gz
 sudo tar -xvf ~/community.tar.gz -C ~/
 sudo cp ~/community-rules/* /usr/local/etc/snort/rules
-sudo cp /usr/local/etc/snort/snort.lua.example /usr/local/etc/snort/snort.lua
+sudo echo ' # Setup the network addresses you are protecting HOME_NET= ‘server_public_IP/CIDR’
+# Set up the external network addresses. Leave as "any" in most situations
+EXTERNAL_NET=’!$HOME_NET’
+# Path to your rules files (this can be a relative path)
+rules = [[
+include $RULE_PATH/snort3-community-rules/snort3-community.rules
+]] ' > /etc/snort/snort.lua
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP "
 
