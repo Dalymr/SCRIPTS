@@ -102,6 +102,3 @@ include $RULE_PATH/snort3-community-rules/snort3-community.rules
 ]] ' > /etc/snort/snort.lua
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP , Lancer Snort avec la commande : sudo snort -c /usr/local/etc/snort/snort.lua -i eth0 "
-
-#Execution de Snort
-sudo snort -c /usr/local/etc/snort/snort.lua -i eth0
