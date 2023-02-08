@@ -46,23 +46,23 @@ sudo ln -s /usr/local/bin/snort /usr/sbin/snort
 # COnfiguration de l'interface
 sudo ip link set dev eth0 promisc on
 sudo ethtool -k eth0 | grep receive-offload
+sudo generic-receive-offload: on
 sudo ethtool -K eth0 gro off lro off
 sudo apt install ethtool
 
 # creation et activation de  system service unit
 sudo bash -c "cat > /etc/systemd/system/snort-nic.service" << EOL
-[Unit]
-Description=Set Snort 3 NIC in promiscuous mode and Disable GRO, LRO on boot
-After=network.target
-
+[[Unit]
+Description= Set Snort 3 NIC in promiscuous mode and Disable
+GRO, LRO on boot
+After= network target
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/ip link set dev eth0 promisc on
-ExecStart=/usr/bin/ethtool -K eth0 gro off lro off
-TimeoutStartSec=0
+ExecStart=/usr/bin/ethtool –K eth0 gro off lro off
+TimoutStartSec=0
 RemainAfterExit=yes
-
-[Install]
+[install]
 WantedBy=default.target
 EOL
 
@@ -85,8 +85,14 @@ sudo chown snort:snort /var/log/snort
 sudo chown snort:snort /usr/local/lib/snort_dynamicrules
 sudo chmod 750 /var/log/snort
 sudo chmod 750 /usr/local/lib/snort_dynamicrules
+sudo touch /usr/local/etc/snort/rules/white_list.rules
+sudo touch /usr/local/etc/snort/rules/black_list.rules
+sudo touch /usr/local/etc/snort/rules/local.rules
 
 #configuration de Snort en copiant le fichier de configuration de base et en le modifiant selon nos besoins :
+wget https://www.snort.org/rules/community -O ~/community.tar.gz
+sudo tar -xvf ~/community.tar.gz -C ~/
+sudo cp ~/community-rules/* /usr/local/etc/snort/rules
 sudo cp /usr/local/etc/snort/snort.lua.example /usr/local/etc/snort/snort.lua
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP "
