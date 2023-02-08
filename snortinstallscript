@@ -9,7 +9,10 @@ sudo apt-get upgrade -y
 # Installation de dépendances
 sudo apt-get autoremove -y
 sudo apt-get install -y --install-recommends build-essential libpcap-dev libpcre3-dev libnet1-dev zlib1g-dev luajit hwloc  libdnet libdnet-dev libdumbnet-dev bison flex liblzma-dev openssl libssl-dev pkg-config libhwloc-dev cmake cpputest libsqlite3-dev uuid-dev libcmocka-dev libnetfilter-queue-dev libmnl-dev autotools-dev libluajit-5.1-dev libunwind-dev
-
+wget 	http://ftp.de.debian.org/debian/pool/main/d/dnprogs/libdnet_2.65+b2_amd64.deb
+sudo dpkg -i libdnet_2.65+b2_amd64.deb
+wget http://ftp.de.debian.org/debian/pool/main/d/dnprogs/libdnet-dev_2.65+b2_amd64.deb
+sudo dpkg -i libdnet-dev_2.65+b2_amd64.deb
 # extraction et telechargement de DAQ
 mkdir snort-source-files
 cd snort-source-files
