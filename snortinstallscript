@@ -1,0 +1,95 @@
+#!/bin/bash
+
+#Made by DalyMR , L2-SR-C
+
+# Mise à jour de systéme
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# Installation de dépendances
+sudo apt-get install build-essential libpcap-dev libpcre3-dev libnet1-dev zlib1g-dev luajit hwloc libdnet-dev libdumbnet-dev bison flex liblzma-dev openssl libssl-dev pkg-config libhwloc-dev cmake cpputest libsqlite3-dev uuid-dev libcmocka-dev libnetfilter-queue-dev libmnl-dev autotools-dev libluajit-5.1-dev libunwind-dev
+
+# extraction et telechargement de DAQ
+mkdir snort-source-files
+cd snort-source-files
+sudo apt install git
+sudo git clone https://github.com/snort3/libdaq.git
+cd libdaq
+sudo ./bootstrap
+
+# Compilation et installation de DAQ
+./configure && make && make install
+
+# Perfectionnement de Compilateur
+cd ..
+wget https://github.com/gperftools/gperftools/releases/download/gperftools-2.10/gperftools-2.10.tar.gz
+tar xzf gperftools-2.10.tar.gz
+cd gperftools-2.10/
+./configure
+sudo make install
+
+# Telechargement ,Extraction et installation de Snort
+cd ..
+git clone https://github.com/snort3/snort3.git
+cd snort3/
+./configure_cmake.sh --prefix=/usr/local --enable-tcmalloc
+cd build
+make
+sudo make install
+
+# Mise a jour des libraries
+sudo ldconfig
+
+# Creation de lien symbolique pour snort binairies
+sudo ln -s /usr/local/bin/snort /usr/sbin/snort
+
+# COnfiguration de l'interface
+sudo ip link set dev eth0 promisc on
+sudo ethtool -k eth0 | grep receive-offload
+sudo ethtool -K eth0 gro off lro off
+sudo apt install ethtool
+
+# creation et activation de  system service unit
+sudo bash -c "cat > /etc/systemd/system/snort-nic.service" << EOL
+[Unit]
+Description=Set Snort 3 NIC in promiscuous mode and Disable GRO, LRO on boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ip link set dev eth0 promisc on
+ExecStart=/usr/bin/ethtool -K eth0 gro off lro off
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
+EOL
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now snort-nic.service
+
+# creation de nouveau utilisateur sans privileges
+sudo groupadd snort
+sudo useradd snort -r -s /sbin/nologin -c SNORT_ID -g snort
+
+# creation des directories pour la configuration de Snort 
+sudo mkdir -p /etc/snort/rules
+sudo mkdir /var/log/snort
+sudo mkdir /usr/local/lib/snort_dynamicrules
+
+# Mise a jour des permissions pour les nouveaux directories
+sudo chown -R snort:snort /etc/snort
+sudo chown -R snort:snort /var
+sudo chown snort:snort /var/log/snort
+sudo chown snort:snort /usr/local/lib/snort_dynamicrules
+sudo chmod 750 /var/log/snort
+sudo chmod 750 /usr/local/lib/snort_dynamicrules
+
+#configuration de Snort en copiant le fichier de configuration de base et en le modifiant selon nos besoins :
+sudo cp /usr/local/etc/snort/snort.lua.example /usr/local/etc/snort/snort.lua
+
+echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP "
+
+#Execution de Snort
+sudo snort -c /usr/local/etc/snort/snort.lua -i eth0
