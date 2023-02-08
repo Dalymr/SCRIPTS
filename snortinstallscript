@@ -7,6 +7,7 @@ sudo apt-get update -y
 sudo apt-get upgrade -y
 
 # Installation de dépendances
+sudo apt-get autoremove
 sudo apt-get install -y build-essential libpcap-dev libpcre3-dev libnet1-dev zlib1g-dev luajit hwloc  libdnet libdnet-dev libdumbnet-dev bison flex liblzma-dev openssl libssl-dev pkg-config libhwloc-dev cmake cpputest libsqlite3-dev uuid-dev libcmocka-dev libnetfilter-queue-dev libmnl-dev autotools-dev libluajit-5.1-dev libunwind-dev
 
 # extraction et telechargement de DAQ
@@ -16,6 +17,7 @@ sudo apt install git
 sudo git clone https://github.com/snort3/libdaq.git
 cd libdaq
 sudo ./bootstrap
+apt-get install cmake
 
 # Compilation et installation de DAQ
 ./configure && make && make install
