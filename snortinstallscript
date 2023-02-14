@@ -54,7 +54,7 @@ sudo ethtool -K eth0 gro off lro off
 sudo apt install ethtool
 
 # creation et activation de  system service unit
-sudo bash -c "cat > /etc/systemd/system/snort-nic.service" << EOL
+sudo bash -c "cat > /etc/systemd/system/snort3-nic.service" << EOL
 [[Unit]
 Description= Set Snort 3 NIC in promiscuous mode and Disable
 GRO, LRO on boot
@@ -70,19 +70,19 @@ WantedBy=default.target
 EOL
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now snort-nic.service
+sudo systemctl enable --now snort3-nic.service
 
 # creation de nouveau utilisateur sans privileges
 sudo groupadd snort
 sudo useradd snort -r -s /sbin/nologin -c SNORT_ID -g snort
 
 # creation des directories pour la configuration de Snort 
-sudo mkdir -p /etc/snort/rules
+sudo mkdir -p /usr/local/etc/snort/rules
 sudo mkdir /var/log/snort
 sudo mkdir /usr/local/lib/snort_dynamicrules
 
 # Mise a jour des permissions pour les nouveaux directories
-sudo chown -R snort:snort /etc/snort
+sudo chown -R snort:snort /usr/local/etc/snort
 sudo chown -R snort:snort /var
 sudo chown snort:snort /var/log/snort
 sudo chown snort:snort /usr/local/lib/snort_dynamicrules
@@ -102,6 +102,6 @@ EXTERNAL_NET=’!$HOME_NET’
 # Path to your rules files (this can be a relative path)
 rules = [[
 include $RULE_PATH/snort3-community-rules/snort3-community.rules
-]] ' > /etc/snort/snort.lua
+]] ' > usr/local/etc/snort/snort.lua
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP , Lancer Snort avec la commande : sudo snort -c /usr/local/etc/snort/snort.lua -i eth0 "
