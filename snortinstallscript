@@ -5,6 +5,8 @@
 # Mise à jour de systéme
 sudo apt-get update -y
 
+sudo apt-get install dh-autoreconf -y
+
 # Installation de dépendances
 sudo apt-get autoremove -y
 sudo apt-get install -y --install-recommends build-essential libpcap-dev libpcre3-dev libnet1-dev zlib1g-dev luajit hwloc  libdnet libdnet-dev libdumbnet-dev bison flex liblzma-dev openssl libssl-dev pkg-config libhwloc-dev cmake cpputest libsqlite3-dev uuid-dev libcmocka-dev libnetfilter-queue-dev libmnl-dev autotools-dev libluajit-5.1-dev libunwind-dev
@@ -96,12 +98,5 @@ sudo touch /usr/local/etc/snort/rules/local.rules
 wget https://www.snort.org/rules/community -O ~/community.tar.gz
 sudo tar -xvf ~/community.tar.gz -C ~/
 sudo cp ~/community-rules/* /usr/local/etc/snort/rules
-sudo echo ' # Setup the network addresses you are protecting HOME_NET= ‘server_public_IP/CIDR’
-# Set up the external network addresses. Leave as "any" in most situations
-EXTERNAL_NET=’!$HOME_NET’
-# Path to your rules files (this can be a relative path)
-rules = [[
-include $RULE_PATH/snort3-community-rules/snort3-community.rules
-]] ' > /usr/local/etc/snort/snort.lua
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP , Lancer Snort avec la commande : sudo snort -c /usr/local/etc/snort/snort.lua -i eth0 "
