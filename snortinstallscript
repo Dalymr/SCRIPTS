@@ -98,7 +98,7 @@ sudo touch /usr/local/etc/snort/rules/local.rules
 wget https://www.snort.org/rules/community -O ~/community.tar.gz
 sudo tar -xvf ~/community.tar.gz -C ~/
 sudo cp ~/community-rules/* /usr/local/etc/snort/rules
-sudo echo ' ---------------------------------------------------------------------------
+sudo cat ' ---------------------------------------------------------------------------
 -- Snort++ configuration
 ---------------------------------------------------------------------------
 
