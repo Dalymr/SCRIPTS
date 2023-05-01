@@ -375,7 +375,7 @@ rate_filter =
 
 if ( tweaks ~= nil ) then
     include(tweaks .. '.lua')
-end " 
+end 
 EOL
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP , Lancer Snort avec la commande : sudo snort -c /usr/local/etc/snort/snort.lua -i eth0 "
