@@ -49,11 +49,10 @@ sudo ldconfig
 sudo ln -s /usr/local/bin/snort /usr/sbin/snort
 
 # COnfiguration de l'interface
-sudo ip link set dev eth0 promisc on
-sudo ethtool -k eth0 | grep receive-offload
-sudo generic-receive-offload: on
-sudo ethtool -K eth0 gro off lro off
 sudo apt install ethtool
+sudo ip link set dev eth0 promisc on
+sudo ethtool -K eth0 gro off lro off
+
 
 # creation et activation de  system service unit
 sudo bash -c "cat > /etc/systemd/system/snort3-nic.service" << EOL
@@ -97,8 +96,9 @@ sudo touch /usr/local/etc/snort/rules/local.rules
 #configuration de Snort en copiant le fichier de configuration de base et en le modifiant selon nos besoins :
 wget https://www.snort.org/rules/community -O ~/community.tar.gz
 sudo tar -xvf ~/community.tar.gz -C ~/
-sudo cp ~/community-rules/* /usr/local/etc/snort/rules
-sudo cat ' ---------------------------------------------------------------------------
+sudo cp ~/community-rules/community.rules /usr/local/etc/snort/rules/community.rules
+sudo bash -c " cat > /usr/local/etc/snort/snort.lua " << EOL
+---------------------------------------------------------------------------
 -- Snort++ configuration
 ---------------------------------------------------------------------------
 
@@ -290,7 +290,9 @@ ips =
     -- (see also related path vars at the top of snort_defaults.lua)
 
     variables = default_variables,
-    rules = [[ include /usr/local/etc/snort/rules/local.rules ]]
+    rules = [[ 
+    include /usr/local/etc/snort/rules/community.rules
+    include /usr/local/etc/snort/rules/local.rules ]]
 }
 
 -- use these to configure additional rule actions
@@ -351,10 +353,8 @@ rate_filter =
 -- you can enable with defaults from the command line with -A <alert_type>
 -- uncomment below to set non-default configs
 --alert_csv = { }
---alert_fast = { }
---alert_full = {file=true,
-packet=false,
-limit=100}
+--alert_true = { }
+--alert_fast = {file=true,packet=false,limit=100}
 --alert_sfsocket = { }
 --alert_syslog = { }
 --unified2 = { }
@@ -375,6 +375,7 @@ limit=100}
 
 if ( tweaks ~= nil ) then
     include(tweaks .. '.lua')
-end ' > /usr/local/etc/snort/snort.lua
+end " 
+EOL
 
 echo " Snort installé avec succés ! Modifier le fichier /usr/local/etc/snort/snort.lua Selon Donner par le TP , Lancer Snort avec la commande : sudo snort -c /usr/local/etc/snort/snort.lua -i eth0 "
