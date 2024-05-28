@@ -5,7 +5,7 @@ echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4
 apt-get update
 
 
-WAZUH_MANAGER="10.0.0.90" WAZUH_AGENT_GROUP="default" WAZUH_AGENT_NAME="Agent-test-2" apt-get install wazuh-agent -y
+WAZUH_MANAGER="10.0.0.90" WAZUH_AGENT_NAME="Agent-test-2" apt-get install wazuh-agent -y
 
 update-rc.d wazuh-agent defaults 95 10
 
