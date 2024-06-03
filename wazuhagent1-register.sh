@@ -1,11 +1,4 @@
-curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
-
-echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
-
-apt-get update
-
-
-WAZUH_MANAGER="10.0.0.90"  WAZUH_AGENT_NAME="Agent-test-1" apt-get install wazuh-agent -y
+zcurl -so wazuh-agent.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.1.5-1_amd64.deb && sudo WAZUH_MANAGER='10.0.0.90' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent.deb
 
 update-rc.d wazuh-agent defaults 95 10
 
